@@ -1,38 +1,60 @@
 import { useEffect } from "react";
-import { animateBanner } from "./Animations/BannerAnimation"; // adjust path as needed
+import { animateBanner } from "./Animations/BannerAnimation";
 
 export default function Banner() {
-  
-
   useEffect(() => {
     animateBanner();
   }, []);
 
   return (
-    <div className="bg-white text-black px-6 py-10 font-sans relative overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Row Container */}
-        <div className="relative md:h-[500px] h-[300px] bg-white md:px-6">
+    <div
+      className="relative overflow-hidden bg-gradient-to-r from-black via-gray-900 to-black text-white px-6 py-10 font-sans md:h-[500px] h-[300px]"
+    >
+      {/* Background gold glowing shapes */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        {/* Large soft glowing gold circles */}
+        <div className="absolute -top-24 -left-24 w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-yellow-400 via-yellow-300 to-yellow-500 opacity-30 filter blur-3xl"></div>
+        <div className="absolute bottom-12 right-12 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-yellow-500 via-yellow-400 to-yellow-300 opacity-25 filter blur-2xl"></div>
 
+        {/* Thin golden grid lines */}
+        <svg
+          className="absolute inset-0 w-full h-full"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <pattern
+              id="gold-grid"
+              width="10"
+              height="10"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 10 0 L 0 0 0 10"
+                fill="none"
+                stroke="rgba(255, 215, 0, 0.15)"  // gold color with low opacity
+                strokeWidth="0.3"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#gold-grid)" />
+        </svg>
+      </div>
+
+      <div className="max-w-7xl mx-auto h-full relative z-10">
+        <div className="banner-background-animation relative md:h-full h-full md:px-6 text-center">
           {/* PORTFOLIO Text */}
-          <div
-            
-            className="z-0 absolute sm:left-18 left-0 xs:left-0 md:left-27 xl:left-60  lg:left-45 top-1/2 transform -translate-y-1/2 text-left leading-none"
-          >
-            <h1 className="heading-port text-[60px] sm:text-[80px] md:text-[120px] xl:text-[160px] lg:text-[140px] font-black leading-none">PORT</h1>
-            <h1 className="heading-folio text-[60px] sm:text-[80px] md:text-[120px] xl:text-[160px] lg:text-[140px] font-black leading-none">FOLIO</h1>
-          </div>
+          <div className="absolute left-6 md:left-20 top-1/2 transform -translate-y-1/2 text-left leading-none">
+            <h1 className="heading-port text-[45px] sm:text-[70px] md:text-[100px] xl:text-[160px] lg:text-[140px] font-black leading-none text-[#C78E2D] drop-shadow-lg">
+              PORTFOLIO
+            </h1>
 
-          {/* Circle UI/UX Block */}
-          <div
-           
-            className="absolute  lg:w-[400px] lg:h-[400px] md:w-[300px] md:h-[300px] h-[170px] w-[170px] right-10 sm:left-67 left-37  md:left-100 lg:left-130 xl:left-160 top-[40%] transform -translate-y-1/2 bg-white rounded-[50%] p-10 lg:p-14 shadow-lg z-10 border-4 border-transparent"
-          >
-            <div className="text-right">
-              <h2 className="heading-ui text-[20px] sm:text-[28px] md:text-[40px] lg:text-[50px] xl:text-[60px] font-black leading-none">UI UX DESIGN</h2>
-              <h2 className="heading-works text-[20px] sm:text-[28px] md:text-[40px] lg:text-[50px] xl:text-[60px] font-black leading-none">WORKS</h2>
-                
-            </div>
+            {/* UI/UX Design bottom right text */}
+            <h2 className="absolute right-0 -bottom-7 text-[16px] sm:text-[24px] md:text-[30px] font-semibold tracking-wide select-none text-[#C78E2D] drop-shadow-md">
+              UI/UX Design
+            </h2>
           </div>
         </div>
       </div>

@@ -34,4 +34,5 @@ export const animateBanner = () => {
     { opacity: 1, x: 0, scale: 1, duration: 1 },
     "-=0.4"
   );
+  
 };
