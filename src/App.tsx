@@ -1,7 +1,6 @@
 
 import './App.css'
 import Banner from './Components/Banner'
-import Header from './Components/Header'
 import UiDesign from './Components/Uidesign'
 
 
@@ -9,8 +8,8 @@ function App() {
  
 
   return (
-    <div className='min-h-screen bg-gray-100'>
-      <Header/>
+    <div className="min-h-screen bg-gray-100 font-['Cormorant_Garamond']">
+   
       <Banner />
       <UiDesign />
     </div>
