@@ -7,7 +7,8 @@ import type { UiItem } from '../types';
 
 const UiItemForm: React.FC = () => {
   const [name, setName] = useState('');
-  const [url, setUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [htmlUrl, setHtmlUrl]=useState('')
 
   const { mutate, isSuccess, error, isPending } = useMutation({
     mutationFn: (item: UiItem) => addUiItem(item),
@@ -15,9 +16,10 @@ const UiItemForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ name, url });
+    mutate({  name:name.trim(), imageUrl:imageUrl.trim(), htmlUrl:htmlUrl.trim() });
     setName('');
-    setUrl('');
+    setImageUrl('');
+    setHtmlUrl('')
   };
 
   return (
@@ -39,9 +41,17 @@ const UiItemForm: React.FC = () => {
 
         {/* Use textarea for URL for better control/visibility */}
         <textarea
-          placeholder="Item URL"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Image URL... end with .jpg/.png/.jpeg"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          required
+          rows={3}
+          className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black bg-white resize-none"
+        />
+        <textarea
+          placeholder="Html URL... end with .html"
+          value={htmlUrl}
+          onChange={(e) => setHtmlUrl(e.target.value)}
           required
           rows={3}
           className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black bg-white resize-none"

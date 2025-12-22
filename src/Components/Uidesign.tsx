@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const UiDesign=()=> {
+export const UiDesign = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['ui-items'],
     queryFn: fetchUiItems,
@@ -25,27 +25,44 @@ export const UiDesign=()=> {
   const vertLinesRef = useRef<(HTMLHRElement | null)[]>([]);
 
   const itemsPerPage = 6;
-
   const loadMoreItems = useCallback(async () => {
     if (!data || loadingMore || currentIndex >= data.length) return;
     setLoadingMore(true);
 
     const nextItems = data.slice(currentIndex, currentIndex + itemsPerPage);
+
     const updatedItems = await Promise.all(
       nextItems.map(async (item) => {
         try {
-          const res = await fetch(`https://api.microlink.io?url=${encodeURIComponent(item.url)}`);
+          const apiUrl = `https://api.microlink.io?url=${encodeURIComponent(
+            item.imageUrl
+          )}&screenshot=true&meta=false`;
+
+          const res = await fetch(apiUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
           const json = await res.json();
-          return { ...item, image: json?.data?.image?.url || '' };
-        } catch { return item; }
+
+          const imageUrl = json?.data?.screenshot?.url;
+          if (!imageUrl) throw new Error('No screenshot');
+
+          return { ...item, image: imageUrl };
+        } catch (err) {
+          console.error('Preview failed:', item.imageUrl, err);
+          return {
+            ...item,
+            image: 'https://placehold.co/600x400?text=Preview+Unavailable',
+          };
+        }
       })
     );
+
+
 
     setVisibleItems((prev) => [...prev, ...updatedItems]);
     setCurrentIndex((prev) => prev + itemsPerPage);
     setLoadingMore(false);
 
-    // Refresh ScrollTrigger so it accounts for the new height of the section
     setTimeout(() => ScrollTrigger.refresh(), 100);
   }, [data, currentIndex, loadingMore]);
 
@@ -123,6 +140,7 @@ export const UiDesign=()=> {
     return () => observer.disconnect();
   }, [loadMoreItems]);
 
+
   useEffect(() => {
     if (data && visibleItems.length === 0) loadMoreItems();
   }, [data, visibleItems.length, loadMoreItems]);
@@ -133,7 +151,7 @@ export const UiDesign=()=> {
     <section ref={sectionRef} className="bg-white text-gray-900 py-20 px-4 overflow-hidden">
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
         {visibleItems.map((item, index) => (
-          <div key={`${item.name}-${index}`} className="ui-card relative group p-10">
+          <div key={item.id} className="ui-card relative group p-10">
 
             {/* 1. THE POPUP - Positioned absolutely at the bottom, moves FURTHER down on hover */}
             <div className="absolute bottom-10 left-10 right-10
@@ -141,34 +159,28 @@ export const UiDesign=()=> {
     translate-y-0 group-hover:translate-y-3 group-hover:opacity-100 rounded-b-md">
               <h3 className="font-['Cormorant_Garamond'] font-bold italic text-xl  mb-2 text-center">
                 <a
-                  href={item.url}
+                  href={item.htmlUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-
                 >{item.name}</a>
-
               </h3>
-
             </div>
-
             {/* 2. LIFTING CONTENT - Moves UP to create a gap for the popup below */}
             <div className="relative z-10 bg-white transition-transform duration-500 ease-out group-hover:-translate-y-10">
               <a
-                href={item.url}
+                href={item.htmlUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block"
-              >{item.image && (
-<div className="relative aspect-video rounded-t-md bg-gray-100 border border-gray-200 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-700"
-                  />
-                </div>
-              )}
-                
+                className="block aspect-video overflow-hidden bg-gray-100"
+              >
+                <img
+                  src={item.imageUrl || '/placeholder.jpg'}
+                  alt={item.name}
+                  loading="lazy"
+                  className="w-full h-full rounded-t-md shadow-md object-cover object-top"
+                />
               </a>
+
 
             </div>
 

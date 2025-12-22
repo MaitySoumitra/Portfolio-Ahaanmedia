@@ -7,7 +7,8 @@ export interface LoginResponse {
 }
 
 export interface UiItem {
+  id?:string;
   name: string;
-  url: string;
-  image?: string;
+  imageUrl: string;
+  htmlUrl: string;
 }

@@ -1,6 +1,12 @@
 .max-w-9xl{
   max-width: 1600px;
 }
+iframe {
+  overflow: hidden;
+}
+button{
+  cursor: pointer;
+}
 
 
 
