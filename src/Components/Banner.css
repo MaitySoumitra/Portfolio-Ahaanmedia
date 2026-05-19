@@ -1,6 +1,7 @@
 /* ================= Banner Wrapper ================= */
 .uiux-banner {
   height: 75vh;
+  min-height: 500px;
   position: relative;
   overflow: hidden;
   background: #000;
@@ -18,7 +19,7 @@
   height: 100%;
   object-fit: cover;
 
-  /* 🔥 Smooth Zoom Animation */
+  /* Smooth Zoom Animation */
   animation: bgZoom 18s ease-in-out infinite alternate;
 }
 
@@ -36,7 +37,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.72);
   z-index: 1;
 }
 
@@ -46,10 +47,10 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.9) 10%,
+    rgba(0, 0, 0, 0.92) 10%,
     rgba(0, 0, 0, 0.6) 40%,
-    rgba(0, 0, 0, 0.3) 70%,
-    rgba(0, 0, 0, 0.1) 100%
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0.08) 100%
   );
   z-index: 1;
   pointer-events: none;
@@ -60,10 +61,14 @@
   position: relative;
   z-index: 2;
   height: 100%;
+  width: 100%;
+  padding: 20px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   text-align: center;
   color: #fff;
 }
@@ -71,6 +76,7 @@
 /* ================= LOGO ================= */
 .banner-logo {
   width: 200px;
+  max-width: 80%;
   margin-bottom: 14px;
 
   animation: logoDrop 1.4s ease-out forwards;
@@ -96,14 +102,23 @@
 
 /* ================= LETTER DROP TEXT ================= */
 .drop-text {
-  font-size: 7rem;
-  font-weight: 600;
+  font-size: clamp(2.5rem, 9vw, 7rem);
+  font-weight: 700;
   letter-spacing: 2px;
+  line-height: 1.05;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .drop-line {
   display: block;
   line-height: 1.05;
+
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .drop-text span {
@@ -111,6 +126,7 @@
   transform: translateY(-120px);
   opacity: 0;
   animation: letterDrop 3.2s ease infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes letterDrop {
@@ -135,16 +151,110 @@
   }
 }
 
-/* ================= Responsive ================= */
-@media (max-width: 768px) {
-  .drop-text {
-    font-size: 4rem;
-    white-space: normal;
-    padding: 0 16px;
+/* ================= Large Desktop ================= */
+@media (min-width: 1600px) {
+  .uiux-banner {
+    height: 85vh;
   }
 
   .banner-logo {
-    width: 150px;
+    width: 240px;
+  }
+
+  .drop-text {
+    font-size: 8rem;
+  }
+}
+
+/* ================= Laptop ================= */
+@media (max-width: 1200px) {
+  .drop-text {
+    font-size: 5.5rem;
+  }
+
+  .banner-logo {
+    width: 180px;
+  }
+}
+
+/* ================= Tablet ================= */
+@media (max-width: 992px) {
+  .uiux-banner {
+    height: 70vh;
+    min-height: 450px;
+  }
+
+  .drop-text {
+    font-size: 4.5rem;
+    letter-spacing: 1px;
+  }
+
+  .banner-logo {
+    width: 160px;
+  }
+}
+
+/* ================= Mobile ================= */
+@media (max-width: 768px) {
+  .uiux-banner {
+    height: 65vh;
+    min-height: 400px;
+  }
+
+  .banner-center {
+    padding: 20px 16px;
+  }
+
+  .drop-text {
+    font-size: 3.2rem;
+    line-height: 1.1;
+    letter-spacing: 1px;
+  }
+
+  .banner-logo {
+    width: 140px;
+    margin-bottom: 12px;
+  }
+
+  .drop-line {
+    text-align: center;
+  }
+}
+
+/* ================= Small Mobile ================= */
+@media (max-width: 576px) {
+  .uiux-banner {
+    height: 60vh;
+    min-height: 360px;
+  }
+
+  .drop-text {
+    font-size: 2.4rem;
+    line-height: 1.15;
+  }
+
+  .banner-logo {
+    width: 115px;
     margin-bottom: 10px;
+  }
+
+  .drop-text span {
+    animation-duration: 3s;
+  }
+}
+
+/* ================= Extra Small Devices ================= */
+@media (max-width: 380px) {
+  .drop-text {
+    font-size: 1.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .banner-logo {
+    width: 95px;
+  }
+
+  .uiux-banner {
+    min-height: 320px;
   }
 }
