@@ -1,42 +1,21 @@
-
 import "./Banner.css";
- 
+
 const line1 = "UI/UX Design";
 const line2 = "Portfolio";
- 
-const images = [
-   "https://ahaanmedia.com/designing/design/AiGentic.jpg",
-  "https://ahaanmedia.com/designing/design/Hotel-Supermarket.jpg",
-  "https://ahaanmedia.com/designing/design/Asheville.jpg",
-  "https://ahaanmedia.com/designing/design/Bhocking.png",
-  "https://ahaanmedia.com/designing/design/Cosmic.jpg",
-  "https://ahaanmedia.com/designing/design/D.P.Dough.png",
-  "https://ahaanmedia.com/designing/design/Daoud.jpg",
-  "https://ahaanmedia.com/designing/design/Fleur.jpg",
-    "https://ahaanmedia.com/designing/design/BOSS-Automotive.jpg",
-  "https://ahaanmedia.com/designing/design/CleanGroup.png",
-  "https://ahaanmedia.com/designing/design/HotRod.jpg",
-  "https://ahaanmedia.com/designing/design/InUnity2.png",
-  "https://ahaanmedia.com/designing/design/KickOff.png",
-  "https://ahaanmedia.com/designing/design/Network.png",
-];
- 
+
 const Banner = () => {
   return (
     <section className="uiux-banner">
-      {/* Background */}
-      <div className="bg-marquee">
-        <div className="marquee-track">
-          {[...images, ...images].map((img, i) => (
-            <div className="marquee-item" key={i}>
-              <img src={img} alt="" />
-            </div>
-          ))}
-        </div>
+      {/* 🔥 Single Background Image */}
+      <div className="banner-bg">
+        <img
+          src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop"
+          alt="Banner Background"
+        />
       </div>
- 
+
       <div className="overlay"></div>
- 
+
       {/* Center Content */}
       <div className="banner-center">
         {/* 🔥 LOGO */}
@@ -45,7 +24,7 @@ const Banner = () => {
           alt="Logo"
           className="banner-logo"
         />
- 
+
         {/* Heading */}
         <h1 className="drop-text">
           <div className="drop-line">
@@ -55,7 +34,7 @@ const Banner = () => {
               </span>
             ))}
           </div>
- 
+
           <div className="drop-line">
             {line2.split("").map((c, i) => (
               <span
@@ -71,7 +50,5 @@ const Banner = () => {
     </section>
   );
 };
- 
+
 export default Banner;
- 
- 

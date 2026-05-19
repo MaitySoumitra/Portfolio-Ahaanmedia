@@ -1,52 +1,37 @@
 /* ================= Banner Wrapper ================= */
 .uiux-banner {
   height: 75vh;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  background: #000;
   position: relative;
   overflow: hidden;
+  background: #000;
 }
- 
-/* ================= Background ================= */
-.bg-marquee {
+
+/* ================= SINGLE BACKGROUND IMAGE ================= */
+.banner-bg {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: flex-end;
+  z-index: 0;
 }
- 
-.marquee-track {
-  display: flex;
-  width: 200%;
-  transform: rotate(-15deg) translateY(20%);
-  animation: scrollBg 25s linear infinite;
-}
- 
-.marquee-item {
-  width: 25vw;
-  height: 180vh;
-  margin: 5px;
-  border-radius: 18px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
- 
-.marquee-item img {
+
+.banner-bg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+  /* 🔥 Smooth Zoom Animation */
+  animation: bgZoom 18s ease-in-out infinite alternate;
 }
- 
-@keyframes scrollBg {
-  from {
-    transform: translateX(0) rotate(-15deg) translateY(20%);
+
+@keyframes bgZoom {
+  0% {
+    transform: scale(1);
   }
-  to {
-    transform: translateX(-50%) rotate(-15deg) translateY(20%);
+
+  100% {
+    transform: scale(1.12);
   }
 }
- 
+
 /* ================= Overlay ================= */
 .overlay {
   position: absolute;
@@ -54,7 +39,7 @@
   background: rgba(0, 0, 0, 0.75);
   z-index: 1;
 }
- 
+
 .uiux-banner::after {
   content: "";
   position: absolute;
@@ -69,7 +54,7 @@
   z-index: 1;
   pointer-events: none;
 }
- 
+
 /* ================= Center Content ================= */
 .banner-center {
   position: relative;
@@ -82,85 +67,84 @@
   text-align: center;
   color: #fff;
 }
- 
+
 /* ================= LOGO ================= */
 .banner-logo {
   width: 200px;
   margin-bottom: 14px;
- 
-  /* 🔥 DROP ANIMATION */
+
   animation: logoDrop 1.4s ease-out forwards;
 }
- 
+
 /* Logo drop keyframes */
 @keyframes logoDrop {
   0% {
     transform: translateY(-120px);
     opacity: 0;
   }
- 
+
   60% {
     transform: translateY(10px);
     opacity: 1;
   }
- 
+
   100% {
     transform: translateY(0);
     opacity: 1;
   }
 }
- 
- 
+
 /* ================= LETTER DROP TEXT ================= */
 .drop-text {
   font-size: 7rem;
   font-weight: 600;
   letter-spacing: 2px;
 }
- 
+
 .drop-line {
   display: block;
   line-height: 1.05;
 }
- 
+
 .drop-text span {
   display: inline-block;
   transform: translateY(-120px);
   opacity: 0;
   animation: letterDrop 3.2s ease infinite;
 }
- 
+
 @keyframes letterDrop {
   0% {
     transform: translateY(-120px);
     opacity: 0;
   }
+
   35% {
     transform: translateY(8px);
     opacity: 1;
   }
+
   55% {
     transform: translateY(0);
     opacity: 1;
   }
+
   100% {
     transform: translateY(0);
     opacity: 0;
   }
 }
- 
-/* ================= Heading Responsive Only ================= */
+
+/* ================= Responsive ================= */
 @media (max-width: 768px) {
   .drop-text {
     font-size: 4rem;
     white-space: normal;
     padding: 0 16px;
   }
- 
+
   .banner-logo {
     width: 150px;
     margin-bottom: 10px;
   }
 }
- 
- 

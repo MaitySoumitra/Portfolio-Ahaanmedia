@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchUiItems } from '../Admin/api/uiItems';
-import type { UiItem } from '../Admin/types';
+import { fetchUiItems } from '../api/uiItems';
+import type { UiItem } from '../types';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
