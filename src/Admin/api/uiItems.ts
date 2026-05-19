@@ -8,6 +8,6 @@ export const addUiItem = async (item: UiItem) => {
 };
 
 export const fetchUiItems = async (): Promise<UiItem[]> => {
-  const response = await client.get('/ui');
+  const response = await client.get('/designs', {withCredentials: true});
   return response.data;
 };

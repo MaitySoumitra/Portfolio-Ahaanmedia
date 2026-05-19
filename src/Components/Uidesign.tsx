@@ -8,9 +8,10 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export const UiDesign = () => {
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['ui-items'],
     queryFn: fetchUiItems,
+    select: (res: any) => res.data as UiItem[],
   });
 
   const [visibleItems, setVisibleItems] = useState<UiItem[]>([]);
@@ -20,54 +21,39 @@ export const UiDesign = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-
+  
+  // Use arrays for line refs
   const horizLinesRef = useRef<(HTMLHRElement | null)[]>([]);
   const vertLinesRef = useRef<(HTMLHRElement | null)[]>([]);
 
   const itemsPerPage = 6;
+
   const loadMoreItems = useCallback(async () => {
     if (!data || loadingMore || currentIndex >= data.length) return;
     setLoadingMore(true);
 
-    const nextItems = data.slice(currentIndex, currentIndex + itemsPerPage);
+    const nextBatch = data.slice(currentIndex, currentIndex + itemsPerPage);
 
-    const updatedItems = await Promise.all(
-      nextItems.map(async (item) => {
-        try {
-          const apiUrl = `https://api.microlink.io?url=${encodeURIComponent(
-            item.imageUrl
-          )}&screenshot=true&meta=false`;
-
-          const res = await fetch(apiUrl);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-          const json = await res.json();
-
-          const imageUrl = json?.data?.screenshot?.url;
-          if (!imageUrl) throw new Error('No screenshot');
-
-          return { ...item, image: imageUrl };
-        } catch (err) {
-          console.error('Preview failed:', item.imageUrl, err);
-          return {
-            ...item,
-            image: 'https://placehold.co/600x400?text=Preview+Unavailable',
-          };
-        }
-      })
-    );
-
-
+    // FIX: Use Cloudinary transformations directly to avoid Microlink 429 errors
+    const updatedItems = nextBatch.map(item => {
+      if (item.image?.includes('cloudinary.com')) {
+        return { 
+          ...item, 
+          image: item.image.replace('/upload/', '/upload/f_auto,q_auto,w_800,c_limit/') 
+        };
+      }
+      return item;
+    });
 
     setVisibleItems((prev) => [...prev, ...updatedItems]);
     setCurrentIndex((prev) => prev + itemsPerPage);
     setLoadingMore(false);
 
+    // Tell ScrollTrigger to recalculate page height
     setTimeout(() => ScrollTrigger.refresh(), 100);
   }, [data, currentIndex, loadingMore]);
 
-  // --- Animation Logic (Synchronized with WhyTrainSection) ---
-  useEffect(() => {
+   useEffect(() => {
     if (visibleItems.length === 0 || !sectionRef.current) return;
 
     let ctx = gsap.context(() => {
@@ -93,7 +79,7 @@ export const UiDesign = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 80%',
-          end: 'bottom 70%',
+          end: 'bottom 50%',
           scrub: 1,
         },
         defaults: { duration: 1, ease: 'power2.out' }
@@ -107,7 +93,7 @@ export const UiDesign = () => {
         opacity: 1,
         x: 0,
         y: 0,
-        stagger: { each: 0.15, from: 'start' }
+        stagger: { each: 0.10, from: 'start' }
       }, 0.3);
 
       // Horizontal Lines
@@ -115,7 +101,7 @@ export const UiDesign = () => {
         scaleX: 1,
         stagger: 0.2,
         duration: 0.5
-      }, 0.7);
+      }, 0.8);
 
       // Vertical Lines
       tl.to(vLines, {
@@ -123,92 +109,82 @@ export const UiDesign = () => {
 
         stagger: 0.2,
         duration: 0.5,
-      }, 0.8);
+        
+      }, 1.2);
 
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [visibleItems]); // Re-runs every time more items are loaded to include new lines
+  }, [visibleItems]);
 
-  // Infinite Scroll Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) loadMoreItems();
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '300px' });
 
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [loadMoreItems]);
 
-
   useEffect(() => {
     if (data && visibleItems.length === 0) loadMoreItems();
   }, [data, visibleItems.length, loadMoreItems]);
 
-  if (isLoading) return <div className="text-center p-10 bg-white">Loading Gallery...</div>;
-
   return (
     <section ref={sectionRef} className="bg-white text-gray-900 py-20 px-4 overflow-hidden">
+      <h2 ref={titleRef} className="text-center text-5xl font-serif mb-16 italic">
+        Selected UI Designs
+      </h2>
+
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
         {visibleItems.map((item, index) => (
-          <div key={item.id} className="ui-card relative group p-10">
-
-            {/* 1. THE POPUP - Positioned absolutely at the bottom, moves FURTHER down on hover */}
-            <div className="absolute bottom-10 left-10 right-10
-    flex flex-col items-center justify-center p-3 bg-gray-400 text-black z-0 opacity-0 transition-all duration-500 ease-in-out
-    translate-y-0 group-hover:translate-y-3 group-hover:opacity-100 rounded-b-md">
-              <h3 className="font-['Cormorant_Garamond'] font-bold italic text-xl  mb-2 text-center">
-                <a
-                  href={item.htmlUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{item.name}</a>
+          // Use a unique key combining ID and index to fix the duplicate key warning
+          <div key={`${item._id}-${index}`} className="ui-card relative group p-10">
+            
+            {/* HOVER POPUP */}
+            <div className="absolute bottom-10 left-10 right-10 flex flex-col items-center justify-center p-4 bg-gray-900 text-white z-0 opacity-0 transition-all duration-500 ease-in-out translate-y-0 group-hover:translate-y-4 group-hover:opacity-100 rounded-b-lg">
+              <h3 className="font-serif font-bold italic text-lg text-center">
+                <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
               </h3>
             </div>
-            {/* 2. LIFTING CONTENT - Moves UP to create a gap for the popup below */}
+
+            {/* MAIN IMAGE CONTAINER */}
             <div className="relative z-10 bg-white transition-transform duration-500 ease-out group-hover:-translate-y-10">
-              <a
-                href={item.htmlUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block aspect-video overflow-hidden bg-gray-100"
-              >
+              <a href={item.link} target="_blank" rel="noopener noreferrer" className="block aspect-video overflow-hidden shadow-xl border border-gray-100">
                 <img
-                  src={item.imageUrl || '/placeholder.jpg'}
-                  alt={item.name}
+                  src={item.image || '/placeholder.jpg'}
+                  alt={item.title}
+                  className="w-full h-full object-cover object-top"
                   loading="lazy"
-                  className="w-full h-full rounded-t-md shadow-md object-cover object-top"
                 />
               </a>
-
-
             </div>
 
-            {/* 3. GSAP LINES - Kept in place */}
+            {/* VERTICAL GRID LINES */}
             {(index % 3 !== 2) && (
               <hr
-                ref={el => { if (el) vertLinesRef.current[index] = el; }}
-                className="hidden lg:block absolute top-0 right-0 w-[2px] h-full bg-black border-0 z-30"
-                style={{ height: '100%' }}
+                ref={el => { vertLinesRef.current[index] = el; }}
+                className="hidden lg:block absolute top-0 right-0 w-[2px] h-full bg-black border-0 z-20"
               />
             )}
 
-            {index < visibleItems.length - (visibleItems.length % 3 === 0 ? 3 : visibleItems.length % 3) && (
+            {/* HORIZONTAL GRID LINES */}
+            {index < visibleItems.length - 3 && (
               <hr
-                ref={el => { if (el) horizLinesRef.current[index] = el; }}
-                className="hidden lg:block absolute bottom-0 left-[7.5%] w-[85%] h-[2px] bg-black border-0 z-30"
+                ref={el => { horizLinesRef.current[index] = el; }}
+                className="hidden lg:block absolute bottom-0 left-[10%] w-[80%] h-[2px] bg-black border-0 z-20"
               />
             )}
           </div>
         ))}
       </div>
 
-      {/* Infinite Scroll Loader */}
-      <div ref={loaderRef} className="text-center py-20">
-        {currentIndex < (data?.length || 0) && (
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-gray-900 border-t-transparent"></div>
+      {/* INFINITE SCROLL LOADER */}
+      <div ref={loaderRef} className="text-center py-24">
+        {loadingMore && (
+          <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-black border-t-transparent"></div>
         )}
       </div>
     </section>
   );
-}
+};

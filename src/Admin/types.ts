@@ -7,8 +7,9 @@ export interface LoginResponse {
 }
 
 export interface UiItem {
-  id?:string;
-  name: string;
-  imageUrl: string;
-  htmlUrl: string;
+  _id?:string;
+  title: string;
+  image: string;
+  link: string;
+  designer:string
 }
