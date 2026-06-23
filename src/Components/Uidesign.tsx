@@ -8,11 +8,11 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const UiDesign = () => {
-const { data } = useQuery({
-  queryKey: ["ui-items"],
-  queryFn: () => fetchUiItems(),
-  select: (res: any) => res.data as UiItem[],
-});
+  const { data } = useQuery({
+    queryKey: ["ui-items"],
+    queryFn: () => fetchUiItems(),
+    select: (res: any) => res.data as UiItem[],
+  });
 
   const [visibleItems, setVisibleItems] = useState<UiItem[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -32,9 +32,21 @@ const { data } = useQuery({
 
   const categories = [
     "all",
-    ...(data?.map((item) => item.category) || [])
-      .filter(Boolean)
-      .filter((value, index, self) => self.indexOf(value) === index),
+    "business-services",
+    "education-books",
+    "defense-security",
+    "travel",
+    "entertainment",
+    "food-restaurant",
+    "cars-motorcycles",
+    "fashion-beauty",
+    "electronics",
+    "it-tech",
+    "medical-healthcare",
+    "real-estate",
+    "society-people",
+    "sports-outdoors-travel",
+    "others",
   ];
 
   const filteredData =
@@ -173,34 +185,36 @@ const { data } = useQuery({
   return (
     <section
       ref={sectionRef}
-      className="bg-white text-gray-900 py-20 px-4 overflow-hidden"
+      className="bg-white text-gray-900 py-20 px-4 "
     >
-      <h2
-        ref={titleRef}
-        className="text-center text-5xl font-serif mb-16 italic"
-      >
-        Selected UI Designs
-      </h2>
+      <div className="sticky top-0 z-50 bg-white py-8">
+        <h2
+          ref={titleRef}
+          className="text-center text-4xl font-serif mb-10 "
+        >
+          Selected UI Designs
+        </h2>
 
-      <div className="flex flex-wrap justify-center gap-3 mb-16 px-4">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-5 py-2 rounded-full text-sm transition-all duration-300
-      ${
-        selectedCategory === category
-          ? "bg-black text-white"
-          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-      }`}
-          >
-            {category === "all"
-              ? "All"
-              : category
-                  .replaceAll("-", " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase())}
-          </button>
-        ))}
+        <div className="flex flex-wrap justify-center gap-3 px-4">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-5 py-2 rounded-full text-md transition-all duration-300
+        ${
+          selectedCategory === category
+            ? "bg-black text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        }`}
+            >
+              {category === "all"
+                ? "All"
+                : category
+                    .replaceAll("-", " ")
+                    .replace(/\b\w/g, (l) => l.toUpperCase())}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
