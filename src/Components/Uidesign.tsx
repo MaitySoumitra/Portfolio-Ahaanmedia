@@ -189,28 +189,28 @@ export const UiDesign = () => {
           Selected UI Designs
         </h2>
 
-<div className="overflow-x-auto md:overflow-visible scrollbar-hide">
-  <div className="flex md:flex-wrap md:justify-center gap-3 min-w-max md:min-w-0 px-4 pb-2">
-    {categories.map((category) => (
-      <button
-        key={category}
-        onClick={() => setSelectedCategory(category)}
-        className={`px-5 py-2 rounded-full whitespace-nowrap text-md transition-all duration-300
+        <div className="overflow-x-auto md:overflow-visible scrollbar-hide">
+          <div className="flex md:flex-wrap md:justify-center gap-3 min-w-max md:min-w-0 px-4 pb-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-5 py-2 rounded-full whitespace-nowrap text-lg transition-all duration-300
         ${
           selectedCategory === category
             ? "bg-black text-white"
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
-      >
-        {category === "all"
-          ? "All"
-          : category
-              .replaceAll("-", " ")
-              .replace(/\b\w/g, (l) => l.toUpperCase())}
-      </button>
-    ))}
-  </div>
-</div>
+              >
+                {category === "all"
+                  ? "All"
+                  : category
+                      .replaceAll("-", " ")
+                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
