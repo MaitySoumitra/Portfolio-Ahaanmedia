@@ -12,4 +12,5 @@ export interface UiItem {
   image: string;
   link: string;
   designer:string
+  category: string;
 }

@@ -7,7 +7,18 @@ export const addUiItem = async (item: UiItem) => {
   return response.data;
 };
 
-export const fetchUiItems = async (): Promise<UiItem[]> => {
-  const response = await client.get('/designs', {withCredentials: true});
+export const fetchUiItems = async (
+  category: string = "all"
+): Promise<UiItem[]> => {
+
+  const url =
+    category === "all"
+      ? "/designs"
+      : `/designs?category=${category}`;
+
+  const response = await client.get(url, {
+    withCredentials: true,
+  });
+
   return response.data;
 };
