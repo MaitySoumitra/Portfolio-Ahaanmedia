@@ -30,24 +30,25 @@ export const UiDesign = () => {
 
   const itemsPerPage = 6;
 
-  const categories = [
-    "all",
-    "business-services",
-    "education-books",
-    "defense-security",
-    "travel",
-    "entertainment",
-    "food-restaurant",
-    "cars-motorcycles",
-    "fashion-beauty",
-    "electronics",
-    "it-tech",
-    "medical-healthcare",
-    "real-estate",
-    "society-people",
-    "sports-outdoors-travel",
-    "others",
-  ];
+  const categoryLabels: Record<string, string> = {
+    all: "All",
+    "business-services": "Business Services",
+    "education-books": "Education",
+    "defense-security": "Defense/Security",
+    travel: "Travel",
+    entertainment: "Entertainment",
+    "food-restaurant": "Food Restaurant",
+    "cars-motorcycles": "Cars/Motorcycles",
+    "fashion-beauty": "Fashion Beauty",
+    electronics: "Electronics",
+    "it-tech": "IT/Tech",
+    "medical-healthcare": "Medical/Healthcare",
+    "real-estate": "Real Estate",
+    "society-people": "Society People",
+    "sports-outdoors-travel": "Sports",
+    others: "Others",
+  };
+  const categories: string[] = Object.keys(categoryLabels);
 
   const filteredData =
     selectedCategory === "all"
@@ -196,17 +197,13 @@ export const UiDesign = () => {
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-5 py-2 rounded-full whitespace-nowrap text-lg transition-all duration-300
-        ${
-          selectedCategory === category
-            ? "bg-black text-white"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        }`}
+      ${
+        selectedCategory === category
+          ? "bg-black text-white"
+          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+      }`}
               >
-                {category === "all"
-                  ? "All"
-                  : category
-                      .replaceAll("-", " ")
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                {categoryLabels[category] || category}
               </button>
             ))}
           </div>
